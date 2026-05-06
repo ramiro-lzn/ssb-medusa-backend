@@ -1,0 +1,4 @@
+# Ensure shell scripts always use LF
+*.sh text eol=lf
+# Ensure your lockfiles and config stay consistent
+Dockerfile text eol=lf
