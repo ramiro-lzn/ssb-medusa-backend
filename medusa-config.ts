@@ -21,28 +21,27 @@ module.exports = defineConfig({
     redisUrl: process.env.REDIS_URL,
   },
   admin: {
-    disable: process.env.DISABLE_MEDUSA_ADMIN === "true",
-    vite: (config) => {
+  disable: process.env.DISABLE_MEDUSA_ADMIN === "true",
+  vite: (config) => {
+    if (process.env.NODE_ENV === "development") {
       return {
+        ...config,
         server: {
           host: "0.0.0.0",
-          // Allow all hosts when running in Docker (development mode)
-          // In production, this should be more restrictive
-          allowedHosts: [
-            "localhost",
-            ".localhost",
-            "127.0.0.1"
-          ],
+          port: 5173,
+          // This allows you to access the dev server from any host 
+          // (like your local IP or localhost) without being blocked.
+          allowedHosts: true, 
           hmr: {
-            // HMR websocket port inside container
             port: 5173,
-            // Port browser connects to (exposed in docker-compose.yml)
             clientPort: 5173,
           },
         },
       }
-    },
+    }
+    return config;
   },
+},
   modules: [
     {
       resolve: "@medusajs/medusa/caching",
